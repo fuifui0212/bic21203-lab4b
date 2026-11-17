@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Books</title>
+    </head>
+    <body>
+        <h1>Books</h1>
+        <p id="first"></p>
+        <p id="second"></p>
+        <ul id="genres"></ul>
+        <p id="error" style="color: red;"></p>
+
+        <script>
+            async function loadBooks(){
+                try{
+                    const res = await fetch("books.json");
+                    if(!res.ok) throw new Error("HTTP" + res.status);
+                    const data = await res.json();
+                    const books = data.books;
+
+                    document.getElementById("first").textContent = "First book title: " + books[0].title;
+                    document.getElementById("second").textContent = "Second book author: " + books[1].author;
+
+                    const ul = document.getElementById("genres");
+                    books.forEach(b => {
+                        const li = document.createElement("li");
+                        li.textContent = b.title + " - " + b.genres.join(", ");
+                        ul.appendChild(li);
+                    });
+                }   catch (err){
+                    document.getElementById("error").textContent = "Sorry, the book data not be loaded. Please try again later.";
+                    console.error(err);
+                }
+            }
+            loadBooks();
+        </script>
+    </body>
+</html>
